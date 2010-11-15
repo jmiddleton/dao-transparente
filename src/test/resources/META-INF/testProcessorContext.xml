@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<aop:aspectj-autoproxy />
+	<context:annotation-config />
+
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!--
+			Aqui se especifica un nombre distinto a persistence.xml porque JBoss 5 trata de procesar el
+			archivo de persistencia y genera un error. Es decir, que cuando se trabaja con springframework
+			hay que utilizar otro nombre si el servidor es JBoss 5.
+			https://jira.jboss.org/jira/browse/EJBTHREE-1730 https://jira.jboss.org/jira/browse/JBSEAM-3587
+		-->
+		<property name="persistenceXmlLocation" value="classpath*:META-INF/persistence-spring.xml" />
+		<property name="loadTimeWeaver">
+			<bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
+		</property>
+	</bean>
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/anitabpm" />
+		<property name="username" value="anita" />
+		<property name="password" value="anita" />
+	</bean>
+
+	<!-- Abstract Dao el cual contiene la configuracion base -->
+	<bean id="abstractDaoTarget" class="ar.com.tunuyan.dao.impl.JpaGenericDaoImpl" abstract="true"
+		init-method="init">
+		<property name="namingStrategy" ref="cacheFinderNamingStrategy" />
+		<property name="fetchSize" value="500" />
+		<property name="maxResults" value="500" />
+		<property name="cacheQueries" value="true" />
+		<property name="queryCacheRegion" value="region.consultas.dao" />
+	</bean>
+
+	<bean id="cacheFinderNamingStrategy" class="ar.com.tunuyan.strategy.impl.CacheFinderNamingStrategy">
+		<property name="prefixes" value="findBy, buscar" />
+	</bean>
+
+</beans>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping schema="SAT_GFT">
+	<class name="ar.com.tunuyan.ProcessDefinition" table="GFT_DEFINICION_PROCESOS">
+
+		<id name="id" type="long">
+			<column name="ID_PROCESO" length="64" />
+			<generator class="assigned"></generator>
+		</id>
+
+		<property name="state" type="string">
+			<column name="ESTADO" />
+		</property>
+		<property name="name" type="string">
+			<column name="NOMBRE" length="64" />
+		</property>
+		<property name="description" type="string">
+			<column name="DESCRIPCION" length="254" />
+		</property>
+	</class>
+</hibernate-mapping>

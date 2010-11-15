@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<aop:aspectj-autoproxy />
+	<context:annotation-config />
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/anitabpm" />
+		<property name="username" value="anita" />
+		<property name="password" value="anita" />
+	</bean>
+
+	<!-- Abstract Dao el cual contiene la configuracion base -->
+	<bean id="abstractDaoTarget" class="ar.com.tunuyan.dao.impl.HibernateGenericDaoImpl" abstract="true"
+		init-method="init">
+		<property name="namingStrategy" ref="cacheFinderNamingStrategy" />
+		<property name="fetchSize" value="500" />
+		<property name="maxResults" value="500" />
+		<property name="cacheQueries" value="true" />
+		<property name="queryCacheRegion" value="region.consultas.dao" />
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+	<bean id="cacheFinderNamingStrategy" class="ar.com.tunuyan.strategy.impl.CacheFinderNamingStrategy">
+		<property name="prefixes" value="findBy, buscar" />
+	</bean>
+
+</beans>
