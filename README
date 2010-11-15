@@ -1,0 +1,4 @@
+DAO Transparente es una librer’a que permite generar autom‡ticamente Data Access Objects 
+implementados con Spring y JPA o Hibernate. El principal objetivo es el desarrollo 
+r‡pido de la capa de acceso a datos. 
+El manejo de transacciones es el mismo utilizado por Spring.
